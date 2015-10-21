@@ -1,4 +1,4 @@
-ource can be downloaded from https://github.com/richardheng/rshell.git
+Source can be downloaded from https://github.com/richardheng/rshell.git
 ---
 
 Author & Contributor List
