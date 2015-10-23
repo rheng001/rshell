@@ -32,11 +32,17 @@ void userPrompt()
     cout << login << "@" << hostname << "$ ";
 }
 
+void exec_cmd()
+{
 
-int main()
+}
+
+
+int main(int argc, char**argv()
 {
     userPrompt();
-
+    
+    string cmd;
 
 
     return 0;
