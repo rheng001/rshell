@@ -32,11 +32,24 @@ void userPrompt()
     cout << login << "@" << hostname << "$ ";
 }
 
-void exec_cmd()
+void exec_cmd(int argc, char ** argv)
 {
+    pid_t pid;
 
+    pid = fork();
+
+    if (pid < 0)
+        perror("Error (pid < 0)");
+
+    else if (pid == 0)
+    {
+        execvp(argv[0], argv);
+        perror("execvp error");
+    }
+
+    else 
+        waitpid(pid, NULL, 0);
 }
-
 
 int main(int argc, char**argv()
 {
