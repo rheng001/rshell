@@ -51,12 +51,17 @@ void exec_cmd(int argc, char ** argv)
         waitpid(pid, NULL, 0);
 }
 
-int main(int argc, char**argv()
+int main()
 {
-    userPrompt();
-    
-    string cmd;
+    while (1)
+    {
+        userPrompt();
+        
+        exec_cmd(argc, argv);
 
+        for (int i =0; i < argc, i++)
+            argv[i] = NULL;
+    }
 
     return 0;
 }
