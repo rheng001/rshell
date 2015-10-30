@@ -9,10 +9,11 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <pwd.h>
-#include <boost/tokenizer.hpp>
+
+#define DELIMS "#?%"
+#define MAX 1024
 
 using namespace std;
-using namespace boost;
 
 void userPrompt()
 {
@@ -32,7 +33,7 @@ void userPrompt()
     cout << login << "@" << hostname << "$ ";
 }
 
-void exec_cmd(int argc, char ** argv)
+void exec_cmd(char** line)
 {
     pid_t pid;
 
@@ -43,7 +44,7 @@ void exec_cmd(int argc, char ** argv)
 
     else if (pid == 0)
     {
-        execvp(argv[0], argv);
+        execvp(line[0], line);
         perror("execvp error");
     }
 
@@ -51,17 +52,23 @@ void exec_cmd(int argc, char ** argv)
         waitpid(pid, NULL, 0);
 }
 
+void parse_cmd(char *line, char **cmd)
+{
+
+
+}
+
 int main()
 {
+    char *cmd; //cmd line arg
+    char line[MAX]; //input line
+
     while (1)
     {
         userPrompt();
-        
-        exec_cmd(argc, argv);
-
-        for (int i =0; i < argc, i++)
-            argv[i] = NULL;
+       
     }
-
+       
+    
     return 0;
 }
