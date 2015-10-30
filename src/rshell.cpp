@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <pwd.h>
 
-#define DELIMS "#?%"
+#define DELIMS "#?%|&"
 #define MAX 1024
 
 using namespace std;
@@ -66,14 +66,15 @@ int main()
     while (1)
     {
         userPrompt();
-        fgets(line, MAX, stdin);
-        parse_cmd(line, cmd);
+        fgets(line, MAX, stdin); //reads input line
+        //parse_cmd(line, cmd); //parse input line for execution
         
         if(strcmp(cmd, "exit") == 0)
         {
             cout << "Exiting Shell" << endl;
         }
-       
+        
+       //exec_cmd(cmd); //executes the command line arg
     }   
     return 0;
 }
