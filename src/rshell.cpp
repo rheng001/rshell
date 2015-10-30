@@ -33,7 +33,7 @@ void userPrompt()
     cout << login << "@" << hostname << "$ ";
 }
 
-void exec_cmd(char** line)
+void exec_cmd(char** cmd)
 {
     pid_t pid;
 
@@ -44,7 +44,7 @@ void exec_cmd(char** line)
 
     else if (pid == 0)
     {
-        execvp(line[0], line);
+        execvp(*cmd, cmd);
         perror("execvp error");
     }
 
@@ -54,7 +54,7 @@ void exec_cmd(char** line)
 
 void parse_cmd(char *line, char **cmd)
 {
-
+    
 
 }
 
@@ -66,9 +66,14 @@ int main()
     while (1)
     {
         userPrompt();
+        fgets(line, MAX, stdin);
+        parse_cmd(line, cmd);
+        
+        if(strcmp(cmd, "exit") == 0)
+        {
+            cout << "Exiting Shell" << endl;
+        }
        
-    }
-       
-    
+    }   
     return 0;
 }
