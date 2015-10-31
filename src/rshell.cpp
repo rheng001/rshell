@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <pwd.h>
 
-#define DELIMS "#?%|&"
+#define DELIMS "#?%|& \t;"
 #define MAX 1024
 
 using namespace std;
@@ -52,29 +52,46 @@ void exec_cmd(char** cmd)
         waitpid(pid, NULL, 0);
 }
 
-void parse_cmd(char *line, char **cmd)
+int parse_cmd(char *line, char **cmd)
 {
+    int pos = 0;
+    char *cmdTok = NULL;
+    cmdTok = strtok(line, DELIMS);
     
+    while(cmdTok != NULL)
+    {
+        cmd[pos] = strdup(cmdTok);
+        cmdTok = strtok(NULL, DELIMS);
+        pos++;
+    }
+    return pos;
 
 }
 
 int main()
-{
-    char *cmd; //cmd line arg
+{ 
     char line[MAX]; //input line
-
+    char* cmd[MAX]; //cmd line arg
+    char *readCmd = NULL;
+    
     while (1)
     {
-        userPrompt();
-        fgets(line, MAX, stdin); //reads input line
-        //parse_cmd(line, cmd); //parse input line for execution
+        userPrompt(); 
         
-        if(strcmp(cmd, "exit") == 0)
+        cin.getline(line, MAX); //read input line 
+
+        readCmd = strtok(line, DELIMS);
+
+        int args;
+        args = parse_cmd(readCmd, cmd);
+
+        if (strcmp(readCmd, "exit") == 0)
         {
-            cout << "Exiting Shell" << endl;
+            cout <<"Exiting Shell" << endl;
+            exit(0);
         }
-        
-       //exec_cmd(cmd); //executes the command line arg
+        exec_cmd(cmd);
+        //readCmd = strtok(line, DELIMS);
     }   
     return 0;
 }
