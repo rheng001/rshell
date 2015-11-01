@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <pwd.h>
 
-#define DELIMS "#?%|& \t;"
+#define DELIMS " #?%|&;\n\t"
 #define MAX 1024
 
 using namespace std;
@@ -36,35 +36,40 @@ void userPrompt()
 void exec_cmd(char** cmd)
 {
     pid_t pid;
-
     pid = fork();
 
-    if (pid < 0)
-        perror("Error (pid < 0)");
+    int status;
 
-    else if (pid == 0)
+    if (pid < 0)
     {
-        execvp(*cmd, cmd);
-        perror("execvp error");
+        perror("fork failed");
+        exit(0);
     }
 
-    else 
+    else if (pid == 0) //child process
+    {
+        if( execvp(cmd[0], cmd) == -1)
+        {
+            perror("execvp error");
+        }
+    }
+    else //parent process 
         waitpid(pid, NULL, 0);
 }
 
-int parse_cmd(char *line, char **cmd)
+void parse_cmd(char *line, char **cmd)
 {
     int pos = 0;
-    char *cmdTok = NULL;
+    char *cmdTok;
     cmdTok = strtok(line, DELIMS);
-    
+
     while(cmdTok != NULL)
     {
-        cmd[pos] = strdup(cmdTok);
+        cout << cmdTok << endl; 
+        cmd[pos] = strdup(cmdTok); 
         cmdTok = strtok(NULL, DELIMS);
         pos++;
     }
-    return pos;
 
 }
 
@@ -81,17 +86,15 @@ int main()
         cin.getline(line, MAX); //read input line 
 
         readCmd = strtok(line, DELIMS);
-
-        int args;
-        args = parse_cmd(readCmd, cmd);
+        
+        parse_cmd(readCmd, cmd);
 
         if (strcmp(readCmd, "exit") == 0)
         {
             cout <<"Exiting Shell" << endl;
             exit(0);
         }
-        exec_cmd(cmd);
-        //readCmd = strtok(line, DELIMS);
+        exec_cmd(cmd); 
     }   
     return 0;
 }
