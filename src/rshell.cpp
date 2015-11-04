@@ -9,11 +9,15 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <pwd.h>
+#include <cstring>
+
+#include <boost/tokenizer.hpp>
+
+using namespace std;
+using namespace boost;
 
 #define DELIMS " #?%|&;\n\t"
 #define MAX 1024
-
-using namespace std;
 
 void userPrompt()
 {
@@ -57,44 +61,44 @@ void exec_cmd(char** cmd)
         waitpid(pid, NULL, 0);
 }
 
-void parse_cmd(char *line, char **cmd)
+void parse_cmd(string &line)
 {
-    int pos = 0;
-    char *cmdTok;
-    cmdTok = strtok(line, DELIMS);
 
-    while(cmdTok != NULL)
+    char *cmd[MAX];
+    char_separator<char> sep(DELIMS);
+    tokenizer<char_separator<char> > tok(line,sep);
+    tokenizer<char_separator<char> >::iterator it = tok.begin();
+   
+    int i = 0;
+    
+    for(; it != tok.end(); ++it, i++)
     {
-        cout << cmdTok << endl; 
-        cmd[pos] = strdup(cmdTok); 
-        cmdTok = strtok(NULL, DELIMS);
-        pos++;
+        cout << *it << endl;
+
+        cmd[i] = new char [(*it).size()];
+        strcpy(cmd[i], (*it).c_str());   
     }
 
+    cmd[i] = 0;
+    exec_cmd(cmd);
 }
 
 int main()
 { 
-    char line[MAX]; //input line
-    char* cmd[MAX]; //cmd line arg
-    char *readCmd = NULL;
+    string line; //input line
     
     while (1)
     {
         userPrompt(); 
+        getline(cin, line); //read input line   
         
-        cin.getline(line, MAX); //read input line 
-
-        readCmd = strtok(line, DELIMS);
-        
-        parse_cmd(readCmd, cmd);
-
-        if (strcmp(readCmd, "exit") == 0)
+        if(line == "exit")
         {
-            cout <<"Exiting Shell" << endl;
+            cout <<"Exiting shell" << endl;
             exit(0);
         }
-        exec_cmd(cmd); 
+
+        parse_cmd(line);      
     }   
     return 0;
 }
