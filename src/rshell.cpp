@@ -67,11 +67,11 @@ void parse_cmd(string &line)
     char *cmd[MAX];
     char_separator<char> sep(DELIMS);
     tokenizer<char_separator<char> > tok(line,sep);
-    tokenizer<char_separator<char> >::iterator it = tok.begin();
+    //tokenizer<char_separator<char> >::iterator it = tok.begin();
    
     int i = 0;
     
-    for(; it != tok.end(); ++it, i++)
+    for(tokenizer<char_separator<char> >::iterator it = tok.begin(); it!=tok.end(); ++it, ++i) 
     {
         cout << *it << endl;
 
@@ -89,16 +89,16 @@ int main()
     
     while (1)
     {
-        userPrompt(); 
+        userPrompt(); //prompt
         getline(cin, line); //read input line   
         
-        if(line == "exit")
+        if(line == "exit") //Exits shell
         {
             cout <<"Exiting shell" << endl;
             exit(0);
         }
 
-        parse_cmd(line);      
+        parse_cmd(line); //parse start
     }   
     return 0;
 }
