@@ -64,17 +64,15 @@ void exec_cmd(char** cmd)
 void parse_cmd(string &line)
 {
 
-    char *cmd[MAX];
-    char_separator<char> sep(DELIMS);
-    tokenizer<char_separator<char> > tok(line,sep);
-    //tokenizer<char_separator<char> >::iterator it = tok.begin();
+    char *cmd[MAX]; //cmd line
+    char_separator<char> sep(DELIMS); //delim 
+    tokenizer<char_separator<char> > tok(line,sep); //tokenizer 
    
     int i = 0;
     
     for(tokenizer<char_separator<char> >::iterator it = tok.begin(); it!=tok.end(); ++it, ++i) 
     {
         cout << *it << endl;
-
         cmd[i] = new char [(*it).size()];
         strcpy(cmd[i], (*it).c_str());   
     }
@@ -91,7 +89,13 @@ int main()
     {
         userPrompt(); //prompt
         getline(cin, line); //read input line   
+
+        if(line.find("#") != string::npos) //handling comments
+        {
+            line = line.substr(0, line.find("#"));
+        }
         
+                 
         if(line == "exit") //Exits shell
         {
             cout <<"Exiting shell" << endl;
