@@ -16,8 +16,12 @@
 using namespace std;
 using namespace boost;
 
-#define DELIMS " #?%|&;\n\t"
+#define DELIMS " ?%;\n\t"
 #define MAX 1024
+
+#define FLAG_o 1 //ors flag
+#define FLAG_a 2 // and flag
+#define FLAG_s 3 //semi flag
 
 void userPrompt()
 {
@@ -59,6 +63,10 @@ void exec_cmd(char** cmd)
     }
     else //parent process 
         waitpid(pid, NULL, 0);
+
+    //checking connectors
+
+
 }
 
 void parse_cmd(string &line)
@@ -84,7 +92,8 @@ void parse_cmd(string &line)
 int main()
 { 
     string line; //input line
-    
+    int flags = 0;
+
     while (1)
     {
         userPrompt(); //prompt
@@ -92,9 +101,23 @@ int main()
 
         if(line.find("#") != string::npos) //handling comments
         {
-            line = line.substr(0, line.find("#"));
+            continue;
+        }
+
+        if(line.find("&&") != string::npos)
+        {
+            flags |= FLAG_a;
+        }
+
+        if(line.find("||") != string::npos)
+        {
+            flags |= FLAG_o;
         }
         
+        if(line.find(";" != string::npos)
+        {
+            flags |= FLAG_s;
+        }
                  
         if(line == "exit") //Exits shell
         {
