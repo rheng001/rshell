@@ -16,11 +16,11 @@
 using namespace std;
 using namespace boost;
 
-#define MAX 1024
+#define MAX 256
 
 void userPrompt()
 {
-    char hostname[256];
+    char hostname[MAX];
     string login;
 
     login = getlogin();
@@ -63,7 +63,7 @@ void make_cmd(string &line, const char * conn)
     char_separator<char> delim(conn); //delim 
     tokenizer<char_separator<char> > tok(line,delim); //tokenizer 
     
-    for(tokenizer<char_separator<char> >::iterator it = tok.begin(); it!=tok    .end(); ++it)
+    for(tokenizer<char_separator<char> >::iterator it = tok.begin(); it!=tok.end(); ++it)
     {
         pid_t pid;
 
@@ -106,19 +106,19 @@ int main()
             continue;
         }
 
-        else if(line.find("&&") != string::npos)
+        else if(line.find("&&") != string::npos) //checks for ANDS
         {
             string conAND = "&&";
             make_cmd(line, conAND.c_str());
         }
 
-        else if(line.find("||") != string::npos)
+        else if(line.find("||") != string::npos) //checks for ORS
         {
             string conOR = "||";
             make_cmd(line, conOR.c_str());
         }
  
-        else
+        else //do SEMICOLONS
         {
             string conSEM = ";";
             make_cmd(line, conSEM.c_str());
