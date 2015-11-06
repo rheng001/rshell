@@ -66,12 +66,10 @@ void make_cmd(string &line, const char * conn)
     
     for(tokenizer<char_separator<char> >::iterator it = tok.begin(); it!=tok.end(); it++)
     {
-        pid_t pid;
+        pid_t pid = fork();
         int status;
 
-        pid = fork();
-
-        if (pid == -1)
+        if (pid < 0)
         {
             perror("fork()");
             exit(1);
@@ -80,7 +78,8 @@ void make_cmd(string &line, const char * conn)
         else if (pid == 0) //child process
         {
             string cm = *it;
-            exec_cmd(cm, conn);  
+            exec_cmd(cm, conn); 
+            exit(12); 
         }
         else if (pid > 0)//parent process 
         {
