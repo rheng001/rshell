@@ -43,7 +43,7 @@ void exec_cmd(string &line, const char * conn)
     char_separator<char> delim(" "); //delim 
     tokenizer<char_separator<char> > tok(line,delim); //tokenizer 
     
-    for(tokenizer<char_separator<char> >::iterator it = tok.begin(); it!=tok.end(); ++it, ++i) 
+    for(tokenizer<char_separator<char> >::iterator it = tok.begin(); it!=tok.end(); it++, i++) 
     {
         cmd[i] = new char [(*it).size()];
         strcpy(cmd[i], (*it).c_str());   
@@ -64,9 +64,10 @@ void make_cmd(string &line, const char * conn)
     char_separator<char> delim(conn); //delim 
     tokenizer<char_separator<char> > tok(line,delim); //tokenizer 
     
-    for(tokenizer<char_separator<char> >::iterator it = tok.begin(); it!=tok.end(); ++it)
+    for(tokenizer<char_separator<char> >::iterator it = tok.begin(); it!=tok.end(); it++)
     {
         pid_t pid;
+        int status;
 
         pid = fork();
 
@@ -83,8 +84,7 @@ void make_cmd(string &line, const char * conn)
         }
         else if (pid > 0)//parent process 
         {
-            int status = 0;
-            if(wait(&status) == -1)
+            if(-1 == wait(&status))
             {
                 perror("wait()");
                 exit (1);
@@ -107,7 +107,7 @@ int main()
             continue;
         }
 
-        if((line == "exit") || (line == "quit"))
+        if((line == "exit") || (line == "quit")) //checks for exit/quit
         {
             cout <<"Exiting Shell" << endl;
             exit(0);
