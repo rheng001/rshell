@@ -44,15 +44,14 @@ void exec_cmd(string &line, const char * conn)
     char_separator<char> delim(" "); //delim 
     tokenizer<char_separator<char> > mytok(line,delim); //tokenizer    
    
-    //doesnt work 
+    /* doesnt work exit properly
     tokenizer<char_separator<char> >::iterator it = mytok.begin(); 
-    
-    if(it != mytok.end() && (*it) == std::string("exit"))
+
+    if((*it) == std::string("exit"))
     {  
         cout << "Exiting Shell" << endl;
         exit(EXIT_SUCCESS);
-        abort();
-    }
+    }*/
     
     for(tokenizer<char_separator<char> >::iterator it = mytok.begin(); it!=mytok.end(); it++, i++) 
     {
