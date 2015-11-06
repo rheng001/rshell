@@ -50,10 +50,11 @@ void exec_cmd(string &line, const char * conn)
     }
 
     cmd[i] = 0;
+
     if(-1 == execvp(cmd[0], cmd))
     {
          perror("execvp error");
-         exit(0);
+         exit(1);
     } 
 }
 
@@ -72,7 +73,7 @@ void make_cmd(string &line, const char * conn)
         if (pid == -1)
         {
             perror("fork()");
-            exit(0);
+            exit(1);
         }
 
         else if (pid == 0) //child process
@@ -106,6 +107,12 @@ int main()
             continue;
         }
 
+        if((line == "exit") || (line == "quit"))
+        {
+            cout <<"Exiting Shell" << endl;
+            exit(0);
+        }
+
         else if(line.find("&&") != string::npos) //checks for ANDS
         {
             string conAND = "&&";
@@ -122,12 +129,6 @@ int main()
         {
             string conSEM = ";";
             make_cmd(line, conSEM.c_str());
-        }
-      
-        if(line == "exit") //Exits shell
-        {
-            cout <<"Exiting shell" << endl;
-            exit(0);
         }
     }   
     return 0;
