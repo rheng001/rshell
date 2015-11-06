@@ -41,14 +41,12 @@ void userPrompt()
     cout << login << "@" << hostname << "$ ";
 }
 
-void exec_cmd(char** cmd)
+void exec_cmd(char** cmd, int flag)
 {
-    pid_t pid;
-    pid = fork();
+   // int status;
+    int pid = fork();
 
-    int status;
-
-    if (pid < 0)
+    if (pid == -1)
     {
         perror("fork failed");
         exit(0);
@@ -59,17 +57,34 @@ void exec_cmd(char** cmd)
         if( execvp(cmd[0], cmd) == -1)
         {
             perror("execvp error");
+            exit(0);
+        }
+        exit(EXIT_SUCCESS);
+    }
+    else if (pid > 0)//parent process 
+    {
+        int status = 0;
+        //wait(NULL);
+         
+        if(wait(&status) == -1)
+        {
+            perror("Wait");
+            exit (1);
+        }
+    
+        bool successful = WIFEXITED(status);
+        int exit = WEXITSTATUS(status);
+
+        if(flag == 2)
+        {
+            cout <<"You put an &&" << endl;
+            return;
         }
     }
-    else //parent process 
-        waitpid(pid, NULL, 0);
-
-    //checking connectors
-
 
 }
 
-void parse_cmd(string &line)
+void parse_cmd(string &line, int flag)
 {
 
     char *cmd[MAX]; //cmd line
@@ -80,13 +95,12 @@ void parse_cmd(string &line)
     
     for(tokenizer<char_separator<char> >::iterator it = tok.begin(); it!=tok.end(); ++it, ++i) 
     {
-        cout << *it << endl;
         cmd[i] = new char [(*it).size()];
         strcpy(cmd[i], (*it).c_str());   
     }
 
     cmd[i] = 0;
-    exec_cmd(cmd);
+    exec_cmd(cmd, flag);
 }
 
 int main()
@@ -106,15 +120,15 @@ int main()
 
         if(line.find("&&") != string::npos)
         {
-            flags |= FLAG_a;
+            flags |= FLAG_a; 
         }
 
-        if(line.find("||") != string::npos)
+        else if(line.find("||") != string::npos)
         {
             flags |= FLAG_o;
         }
         
-        if(line.find(";" != string::npos)
+        else if(line.find(";") != string::npos)
         {
             flags |= FLAG_s;
         }
@@ -125,7 +139,7 @@ int main()
             exit(0);
         }
 
-        parse_cmd(line); //parse start
+        parse_cmd(line, flags); //parse start
     }   
     return 0;
 }
