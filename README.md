@@ -1,21 +1,14 @@
-Source can be downloaded from https://github.com/rheng001/rshell.git
----
-
-Author & Contributor List
-----
 Richard Heng
-
-All other known bugs and fixes can be sent to rheng001@ucr.edu
-------
+---
 
 How to run file
 ------------
 
-1. Clone 'https://github.com/rheng001/rshell.git'
-2. 'cd rshell'
-3. 'git checkout hw1'
-4. 'make'
-5. 'bin/rshell'
+1. Clone `https://github.com/rheng001/rshell.git`
+2. `cd rshell`
+3. `git checkout hw1`
+4. `make`
+5. `bin/rshell`
 
 -----
 Overview
@@ -26,3 +19,9 @@ Known Bugs
 ---
 
 Unable to do the following:
+
+1. Can't run command with quotes.
+    e.g `"pwd"`
+2. Cant handle `&` as connector.
+3. Cant have different multiple connectors in one line.
+    e.g "'pwd || pwd && ls; ls;
