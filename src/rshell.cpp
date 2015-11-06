@@ -41,9 +41,9 @@ void exec_cmd(string &line, const char * conn)
     int i = 0; //counter
     char *cmd[MAX]; //cmd line
     char_separator<char> delim(" "); //delim 
-    tokenizer<char_separator<char> > tok(line,delim); //tokenizer 
+    tokenizer<char_separator<char> > mytok(line,delim); //tokenizer 
     
-    for(tokenizer<char_separator<char> >::iterator it = tok.begin(); it!=tok.end(); it++, i++) 
+    for(tokenizer<char_separator<char> >::iterator it = mytok.begin(); it!=mytok.end(); it++, i++) 
     {
         cmd[i] = new char [(*it).size()];
         strcpy(cmd[i], (*it).c_str());   
@@ -62,28 +62,30 @@ void exec_cmd(string &line, const char * conn)
 void make_cmd(string &line, const char * conn)
 {
     char_separator<char> delim(conn); //delim 
-    tokenizer<char_separator<char> > tok(line,delim); //tokenizer 
+    tokenizer<char_separator<char> > mytok(line,delim); //tokenizer 
     
-    for(tokenizer<char_separator<char> >::iterator it = tok.begin(); it!=tok.end(); it++)
+    for(tokenizer<char_separator<char> >::iterator it = mytok.begin(); it!=mytok.end(); it++)
     {
-        pid_t pid = fork();
+        pid_t c_pid, pid;
         int status;
 
-        if (pid < 0)
+        c_pid = fork();
+
+        if (c_pid < 0)
         {
             perror("fork()");
             exit(1);
         }
 
-        else if (pid == 0) //child process
+        else if (c_pid == 0) //child process
         {
-            string cm = *it;
-            exec_cmd(cm, conn); 
+            string str = *it;
+            exec_cmd(str, conn); 
             exit(12); 
         }
-        else if (pid > 0)//parent process 
+        else if (c_pid > 0)//parent process 
         {
-            if(-1 == wait(&status))
+            if((pid = wait(&status)) < 0)
             {
                 perror("wait()");
                 exit (1);
