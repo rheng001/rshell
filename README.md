@@ -26,6 +26,6 @@ Unable to do the following:
 3. Cant have different multiple connectors in one line
     e.g `pwd || pwd && ls; ls;`
 4. Cant combine commands with exit
-    e.g 'ls && ls && exit
+    e.g `ls && ls && exit`
         however single command exit works fine
-        e.g 'exit'
+        e.g `exit`
