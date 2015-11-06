@@ -16,12 +16,7 @@
 using namespace std;
 using namespace boost;
 
-#define DELIMS " ?%;\n\t"
 #define MAX 1024
-
-#define FLAG_o 1 //ors flag
-#define FLAG_a 2 // and flag
-#define FLAG_s 3 //semi flag
 
 void userPrompt()
 {
@@ -41,57 +36,12 @@ void userPrompt()
     cout << login << "@" << hostname << "$ ";
 }
 
-void exec_cmd(char** cmd, int flag)
+void exec_cmd(string &line, const char * conn)
 {
-   // int status;
-    int pid = fork();
-
-    if (pid == -1)
-    {
-        perror("fork failed");
-        exit(0);
-    }
-
-    else if (pid == 0) //child process
-    {
-        if( execvp(cmd[0], cmd) == -1)
-        {
-            perror("execvp error");
-            exit(0);
-        }
-        exit(EXIT_SUCCESS);
-    }
-    else if (pid > 0)//parent process 
-    {
-        int status = 0;
-        //wait(NULL);
-         
-        if(wait(&status) == -1)
-        {
-            perror("Wait");
-            exit (1);
-        }
-    
-        bool successful = WIFEXITED(status);
-        int exit = WEXITSTATUS(status);
-
-        if(flag == 2)
-        {
-            cout <<"You put an &&" << endl;
-            return;
-        }
-    }
-
-}
-
-void parse_cmd(string &line, int flag)
-{
-
+    int i = 0; //counter
     char *cmd[MAX]; //cmd line
-    char_separator<char> sep(DELIMS); //delim 
-    tokenizer<char_separator<char> > tok(line,sep); //tokenizer 
-   
-    int i = 0;
+    char_separator<char> delim(" "); //delim 
+    tokenizer<char_separator<char> > tok(line,delim); //tokenizer 
     
     for(tokenizer<char_separator<char> >::iterator it = tok.begin(); it!=tok.end(); ++it, ++i) 
     {
@@ -100,13 +50,51 @@ void parse_cmd(string &line, int flag)
     }
 
     cmd[i] = 0;
-    exec_cmd(cmd, flag);
+    if(-1 == execvp(cmd[0], cmd))
+    {
+         perror("execvp error");
+         exit(0);
+    } 
+}
+
+
+void make_cmd(string &line, const char * conn)
+{
+    char_separator<char> delim(conn); //delim 
+    tokenizer<char_separator<char> > tok(line,delim); //tokenizer 
+    
+    for(tokenizer<char_separator<char> >::iterator it = tok.begin(); it!=tok    .end(); ++it)
+    {
+        pid_t pid;
+
+        pid = fork();
+
+        if (pid == -1)
+        {
+            perror("fork()");
+            exit(0);
+        }
+
+        else if (pid == 0) //child process
+        {
+            string cm = *it;
+            exec_cmd(cm, conn);  
+        }
+        else if (pid > 0)//parent process 
+        {
+            int status = 0;
+            if(wait(&status) == -1)
+            {
+                perror("wait()");
+                exit (1);
+            }
+        }
+    }
 }
 
 int main()
 { 
     string line; //input line
-    int flags = 0;
 
     while (1)
     {
@@ -118,28 +106,29 @@ int main()
             continue;
         }
 
-        if(line.find("&&") != string::npos)
+        else if(line.find("&&") != string::npos)
         {
-            flags |= FLAG_a; 
+            string conAND = "&&";
+            make_cmd(line, conAND.c_str());
         }
 
         else if(line.find("||") != string::npos)
         {
-            flags |= FLAG_o;
+            string conOR = "||";
+            make_cmd(line, conOR.c_str());
         }
-        
-        else if(line.find(";") != string::npos)
+ 
+        else
         {
-            flags |= FLAG_s;
+            string conSEM = ";";
+            make_cmd(line, conSEM.c_str());
         }
-                 
+      
         if(line == "exit") //Exits shell
         {
             cout <<"Exiting shell" << endl;
             exit(0);
         }
-
-        parse_cmd(line, flags); //parse start
     }   
     return 0;
 }
