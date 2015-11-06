@@ -20,8 +20,12 @@ Known Bugs
 
 Unable to do the following:
 
-1. Can't run command with quotes.
+1. Can't run command with quotes
     e.g `"pwd"`
-2. Cant handle `&` as connector.
-3. Cant have different multiple connectors in one line.
+2. Cant handle `&` as connector
+3. Cant have different multiple connectors in one line
     e.g `pwd || pwd && ls; ls;`
+4. Cant combine commands with exit
+    e.g 'ls && ls && exit
+        however single command exit works fine
+        e.g 'exit'
