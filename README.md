@@ -24,4 +24,4 @@ Unable to do the following:
     e.g `"pwd"`
 2. Cant handle `&` as connector.
 3. Cant have different multiple connectors in one line.
-    e.g '"pwd || pwd && ls; ls;"'
+    e.g `"pwd || pwd && ls; ls;"`
