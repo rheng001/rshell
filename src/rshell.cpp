@@ -10,6 +10,8 @@
 #include <stdlib.h>
 #include <pwd.h>
 #include <cstring>
+#include <cstdlib>
+#include <stdlib.h>
 
 #include <boost/tokenizer.hpp>
 
@@ -41,14 +43,24 @@ void exec_cmd(string &line, const char * conn)
     int i = 0; //counter
     char *cmd[MAX]; //cmd line
     char_separator<char> delim(" "); //delim 
-    tokenizer<char_separator<char> > mytok(line,delim); //tokenizer 
+    tokenizer<char_separator<char> > mytok(line,delim); //tokenizer    
+   
+    //doesnt work 
+    tokenizer<char_separator<char> >::iterator it = mytok.begin(); 
+    
+    if(it != mytok.end() && (*it) == std::string("exit"))
+    {  
+        cout << "Exiting Shell" << endl;
+        exit(EXIT_SUCCESS);
+        abort();
+    }
     
     for(tokenizer<char_separator<char> >::iterator it = mytok.begin(); it!=mytok.end(); it++, i++) 
     {
-        cmd[i] = new char [(*it).size()];
-        strcpy(cmd[i], (*it).c_str());   
+        cmd[i] = new char [(*it).size()]; 
+        strcpy(cmd[i], (*it).c_str());
     }
-
+   
     cmd[i] = 0;
 
     if(-1 == execvp(cmd[0], cmd))
@@ -97,7 +109,7 @@ void make_cmd(string &line, const char * conn)
 int main()
 { 
     string line; //input line
-
+   
     while (1)
     {
         userPrompt(); //prompt
@@ -108,7 +120,7 @@ int main()
             continue;
         }
 
-        if((line == "exit") || (line == "quit")) //checks for exit/quit
+        if((line == "exit") || (line == "quit")) //check exit as 1st input
         {
             cout <<"Exiting Shell" << endl;
             exit(0);
