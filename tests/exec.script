@@ -1,0 +1,41 @@
+Script started on Fri 06 Nov 2015 11:22:22 PM PST
+richard@richard-XPS-13-9343:~/rshell/tests$ #testing single commands
+richard@richard-XPS-13-9343:~/rshell/tests$ pwd
+/home/richard/rshell/tests
+richard@richard-XPS-13-9343:~/rshell/tests$ echo hello
+hello
+richard@richard-XPS-13-9343:~/rshell/tests$ ls
+test.script
+richard@richard-XPS-13-9343:~/rshell/tests$ pwd
+/home/richard/rshell/tests
+richard@richard-XPS-13-9343:~/rshell/tests$ ps
+  PID TTY	   TIME CMD
+ 3771 pts/0    00:00:00 bash
+ 3783 pts/0    00:00:00 ps
+richard@richard-XPS-13-9343:~/rshell/tests$ #testing commands with connectors
+richard@richard-XPS-13-9343:~/rshell/tests$ ls && ls
+test.script
+test.script
+richard@richard-XPS-13-9343:~/rshell/tests$ ls && pwd
+test.script
+/home/richard/rshell/tests
+richard@richard-XPS-13-9343:~/rshell/tests$ ls || pwd
+test.script
+richard@richard-XPS-13-9343:~/rshell/tests$ ls; pwd;
+test.script
+/home/richard/rshell/tests
+richard@richard-XPS-13-9343:~/rshell/tests$ pwd; ls
+/home/richard/rshell/tests
+test.script
+richard@richard-XPS-13-9343:~/rshell/tests$ pwd; pwd;
+/home/richard/rshell/tests
+/home/richard/rshell/tests
+richard@richard-XPS-13-9343:~/rshell/tests$ #testing commands with comments
+richard@richard-XPS-13-9343:~/rshell/tests$ #ls
+richard@richard-XPS-13-9343:~/rshell/tests$ #ls#pwd
+richard@richard-XPS-13-9343:~/rshell/tests$ #hey i can say stuff
+richard@richard-XPS-13-9343:~/rshell/tests$ ##showing exit command
+richard@richard-XPS-13-9343:~/rshell/tests$ exit
+exit
+
+Script done on Fri 06 Nov 2015 11:25:16 PM PST
