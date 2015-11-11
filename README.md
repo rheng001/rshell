@@ -6,7 +6,7 @@ How to run file
 
 1. Clone `https://github.com/rheng001/rshell.git`
 2. `cd rshell`
-3. `git checkout hw1`
+3. `git checkout hw2`
 4. `make`
 5. `bin/rshell`
 
