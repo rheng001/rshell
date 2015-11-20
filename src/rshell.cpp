@@ -96,6 +96,19 @@ void make_cmd(string &line, const char * conn)
     }
 }
 
+int do_check(const char * path)
+{
+    struct stat statbuf;
+
+    if(stat(path, &statbuf) != 0)
+    {   
+        cout << "Not a Directory" << endl;
+        return 0;
+    }
+
+    return S_ISDIR(statbuf.st_mode);
+};
+
 int main()
 { 
     string line; //input line
@@ -126,6 +139,12 @@ int main()
         {
             string conOR = "||";
             make_cmd(line, conOR.c_str());
+        }
+
+        else if(line.find("test") != string::npos) //test command
+        {
+            string testStr = "test";
+            do_check(testStr.c_str());
         }
  
         else //do SEMICOLONS
