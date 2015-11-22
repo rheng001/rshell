@@ -96,17 +96,20 @@ void make_cmd(string &line, const char * conn)
     }
 }
 
-int do_check(const char * path)
+void do_check(string &line)
 {
-    struct stat statbuf;
+    struct stat sb;
 
-    if(stat(path, &statbuf) != 0)
-    {   
-        cout << "Not a Directory" << endl;
-        return 0;
-    }
+    int i = 0; //counter
+    char *test[MAX]; //test line
+    char_separator<char> delim(" "); //delim 
+    tokenizer<char_separator<char> > mytok(line,delim); //tokenizer
 
-    return S_ISDIR(statbuf.st_mode);
+    if(strcmp(test, "-d" ) == 0)
+    {
+        if(stat(test, &sb) == 0)
+
+      
 };
 
 int main()
@@ -141,7 +144,7 @@ int main()
             make_cmd(line, conOR.c_str());
         }
 
-        else if(line.find("test") != string::npos) //test command
+        else if((line.find("test") != string::npos || (line.find("[") != string::npos)) //test command
         {
             string testStr = "test";
             do_check(testStr.c_str());
