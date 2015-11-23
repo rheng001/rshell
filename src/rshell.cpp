@@ -20,6 +20,10 @@ using namespace boost;
 
 #define MAX 256
 
+const char dFLAG[] = "-d";
+const char eFLAG[] = "-e";
+const char fFLAG[] = "-f";
+
 void userPrompt()
 {
     char hostname[MAX];
@@ -96,21 +100,70 @@ void make_cmd(string &line, const char * conn)
     }
 }
 
-void do_check(string &line)
+void do_check(string &line, const char * flag)
 {
-    struct stat sb;
+    struct stat sb; 
+     
+    if(strcmp(flag, dFLAG) == 0)
+    {  
+        string path = "test -d";
 
-    int i = 0; //counter
-    char *test[MAX]; //test line
-    char_separator<char> delim(" "); //delim 
-    tokenizer<char_separator<char> > mytok(line,delim); //tokenizer
+        int i = line.find(path);
+        if(i != string::npos)
+        {
+          line.erase(i, path.length()+1);
+        }
+         
+        if(lstat(line.c_str(), &sb) == 0 && S_ISDIR(sb.st_mode))
+        {
+                cout << "Is a Directory" << endl;
+        }
+        else
+        {
+                cout <<"Not Directory" << endl;
+        }
+    }
 
-    if(strcmp(test, "-d" ) == 0)
+    else if(strcmp(flag, fFLAG) == 0)
     {
-        if(stat(test, &sb) == 0)
+        string path = "test -f";
 
-      
-};
+        int i = line.find(path);
+        if(i != string::npos)
+        {
+          line.erase(i, path.length()+1);
+        }
+        
+        if(lstat(line.c_str(), &sb) == 0 && S_ISREG(sb.st_mode))
+        {
+                cout << "Is a file" << endl;
+        }
+        else
+        {
+                cout <<"Not a file" << endl;
+        }
+    }
+
+    else if(strcmp(flag, eFLAG) == 0)
+    {
+        string path = "test -e";
+
+        int i = line.find(path);
+        if(i != string::npos)
+        {
+          line.erase(i, path.length()+1);
+        }
+
+        if((lstat(line.c_str(), &sb) == 0 && S_ISDIR(sb.st_mode)) || (lstat(line.c_str(), &sb) == 0 && S_ISREG(sb.st_mode)))
+        {
+                cout << "Is a Directory/File" << endl;
+        }
+        else
+        {
+                cout <<"Not Directory/File" << endl;
+       }
+    }   
+}
 
 int main()
 { 
@@ -144,10 +197,20 @@ int main()
             make_cmd(line, conOR.c_str());
         }
 
-        else if((line.find("test") != string::npos || (line.find("[") != string::npos)) //test command
+        else if((line.find("test") != string::npos || (line.find("[") != string::npos))) //test command
         {
-            string testStr = "test";
-            do_check(testStr.c_str());
+            if(line.find("-d") != string::npos) //-d flag
+            {
+                do_check(line, dFLAG);
+            }
+            else if (line.find("-f") != string::npos) //-f flag
+            {
+                do_check(line, fFLAG);
+            }
+            else if (line.find("-e") != string::npos) // -e flag
+            {
+                do_check(line, eFLAG); 
+            }
         }
  
         else //do SEMICOLONS
