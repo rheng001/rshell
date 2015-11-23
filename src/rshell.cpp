@@ -104,14 +104,14 @@ void do_check(string &line, const char * flag)
 {
     struct stat sb; 
      
-    if(strcmp(flag, dFLAG) == 0)
+    if(strcmp(flag, dFLAG) == 0) //look for dflag
     {  
         string path = "test -d";
 
         int i = line.find(path);
         if(i != string::npos)
         {
-          line.erase(i, path.length()+1);
+          line.erase(i, path.length()+1); //deletes everything except path
         }
          
         if(lstat(line.c_str(), &sb) == 0 && S_ISDIR(sb.st_mode))
@@ -124,14 +124,14 @@ void do_check(string &line, const char * flag)
         }
     }
 
-    else if(strcmp(flag, fFLAG) == 0)
+    else if(strcmp(flag, fFLAG) == 0) //look for flag
     {
         string path = "test -f";
 
         int i = line.find(path);
         if(i != string::npos)
         {
-          line.erase(i, path.length()+1);
+          line.erase(i, path.length()+1); //deltes everything except path
         }
         
         if(lstat(line.c_str(), &sb) == 0 && S_ISREG(sb.st_mode))
@@ -144,14 +144,14 @@ void do_check(string &line, const char * flag)
         }
     }
 
-    else if(strcmp(flag, eFLAG) == 0)
+    else if(strcmp(flag, eFLAG) == 0) //looks for eflag
     {
         string path = "test -e";
 
         int i = line.find(path);
         if(i != string::npos)
         {
-          line.erase(i, path.length()+1);
+          line.erase(i, path.length()+1); //deletes everything excepth path
         }
 
         if((lstat(line.c_str(), &sb) == 0 && S_ISDIR(sb.st_mode)) || (lstat(line.c_str(), &sb) == 0 && S_ISREG(sb.st_mode)))
