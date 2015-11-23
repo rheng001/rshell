@@ -32,3 +32,4 @@ Unable to do the following:
 5. test command is unable to handle brackets
 6. Not able to get parenthesis function working
 7. Precedance operators not working.
+8. Must have a test/path/file test path otherwise make dir/file seperately.
