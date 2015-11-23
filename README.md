@@ -29,3 +29,6 @@ Unable to do the following:
     e.g `ls && ls && exit`
         however single command exit works fine
         e.g `exit`
+5. test command is unable to handle brackets
+6. Not able to get parenthesis function working
+7. Precedance operators not working.
